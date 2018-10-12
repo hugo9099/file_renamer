@@ -34,9 +34,11 @@ def get_new_name(old_name):
     diff = mydate - starting_date
     # print diff.days
 
+    # Logic to calculate gps date
     gps_date = STARTING_GPS_DATE + diff.days
     # print gps_date
 
+    # Logic to calculate gps week
     gps_week = 1982 + gps_date/7
     # print gps_week
 
@@ -46,22 +48,39 @@ def get_new_name(old_name):
     return new_name, gps_week
 
 
+def get_months():
+    months = []
+    for x in os.listdir('.'):
+        # Get all the folders starting with 201 (2018, 2019, etc.)
+        if x.startswith("201") and os.path.isdir(x):
+            months.append(x)
+
+    return months
+
+
 def main():
 
     print ""
-    # print "The dir is: %s" % os.listdir(os.getcwd())
+    # Get all the months (folders) to process
+    months = get_months()
 
-    for root, dirs, files in os.walk("./201808/"):
-        for filename in files:
+    # Go over each month
+    for month in months:
+        # Retrieve files and iterate over each file
+        for root, dirs, files in os.walk("./" + month + "/"):
+            for filename in files:
+                old_name = filename
+                # Generate new name based on date and gps week (new folder)
+                new_name, gps_week = get_new_name(old_name)
+                print filename + "   renamed to   " + new_name
 
-            old_name = filename
-            new_name, gps_week = get_new_name(old_name)
-            print filename + "   renamed to   " + new_name
-
-            folder_exist = os.path.exists("./201808/UNAH" + str(gps_week))
-            if folder_exist is not True:
-                os.mkdir("./201808/UNAH" + str(gps_week))
-            os.rename("./201808/" + old_name, "./201808/" + new_name)
+                # Check if gps week folder exist
+                folder_exist = os.path.exists("./" + month + "/UNAH" + str(gps_week))
+                # Create new folder if not found
+                if folder_exist is not True:
+                    os.mkdir("./" + month + "/UNAH" + str(gps_week))
+                # Actual renaming
+                os.rename("./" + month + "/" + old_name, "./" + month + "/" + new_name)
 
     print ""
     print "Done..!!"
