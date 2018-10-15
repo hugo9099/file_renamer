@@ -50,12 +50,12 @@ def get_new_name(old_name):
     # Get the prefix
     prefix = old_name[:4]
     prefix = prefix.upper()
-    print prefix
+    # print prefix
 
     # Get the file extension
     k = old_name.rfind(".") + 1
     file_extension = old_name[k:]
-    print file_extension
+    # print file_extension
 
     new_name = prefix + str(gps_week) + "/" + prefix + str(day_of_the_year) + "0." + file_extension
     # print new_name
@@ -83,12 +83,6 @@ def main():
     # print new_name
     #
     # print "gps week: " + str(gps_week)
-
-    # mydate_str = old_name[:-10]
-    # mydate_str = mydate_str[-8:]
-
-    # mydate_str = old_name[:12]
-    # mydate_str = mydate_str[-8:]
 
     # Get all the months (folders) to process
     months = get_months()
