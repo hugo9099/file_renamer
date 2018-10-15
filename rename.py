@@ -29,7 +29,7 @@ def get_new_name(old_name):
 
     # old_name = "unah20180910_000000.AS"
 
-    mydate_str = old_name[:-10]
+    mydate_str = old_name[:12]
     mydate_str = mydate_str[-8:]
 
     mydate = datetime.strptime(mydate_str, '%Y%m%d')
@@ -52,7 +52,12 @@ def get_new_name(old_name):
     prefix = prefix.upper()
     print prefix
 
-    new_name = prefix + str(gps_week) + "/" + prefix + str(day_of_the_year) + "0.AS"
+    # Get the file extension
+    k = old_name.rfind(".") + 1
+    file_extension = old_name[k:]
+    print file_extension
+
+    new_name = prefix + str(gps_week) + "/" + prefix + str(day_of_the_year) + "0." + file_extension
     # print new_name
 
     return new_name, gps_week, prefix
@@ -73,11 +78,17 @@ def main():
     print ""
 
     # old_name = "unah20170724_000000.AS"
-    # new_name, gps_week = get_new_name(old_name)
+    # new_name, gps_week, prefix = get_new_name(old_name)
     #
     # print new_name
     #
     # print "gps week: " + str(gps_week)
+
+    # mydate_str = old_name[:-10]
+    # mydate_str = mydate_str[-8:]
+
+    # mydate_str = old_name[:12]
+    # mydate_str = mydate_str[-8:]
 
     # Get all the months (folders) to process
     months = get_months()
