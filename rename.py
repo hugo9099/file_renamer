@@ -18,34 +18,44 @@ import os
 from datetime import datetime
 
 
-STARTING_DATE = "20180729"
-STARTING_GPS_DATE = 210
-STARTING_GPS_WEEK = 2012
+STARTING_GPS_WEEK_DATE = "19800106"
+
+# STARTING_DATE = "20180729"
+# STARTING_GPS_DATE = 210
+# STARTING_GPS_WEEK = 2012
 
 
 def get_new_name(old_name):
-    # old_name = "unah20180910_000000.AS"
-    old_name = old_name[:-10]
-    old_name = old_name[-8:]
 
-    mydate = datetime.strptime(old_name, '%Y%m%d')
+    # old_name = "unah20180910_000000.AS"
+
+    mydate_str = old_name[:-10]
+    mydate_str = mydate_str[-8:]
+
+    mydate = datetime.strptime(mydate_str, '%Y%m%d')
     # print mydate
-    starting_date = datetime.strptime(STARTING_DATE, '%Y%m%d')
-    diff = mydate - starting_date
+    starting_gps_week_date = datetime.strptime(STARTING_GPS_WEEK_DATE, '%Y%m%d')
+    diff_to_gps_week = mydate - starting_gps_week_date
     # print diff.days
 
-    # Logic to calculate gps date
-    gps_date = STARTING_GPS_DATE + diff.days
-    # print gps_date
+    # Logic to calculate day of the year
+    first_day_of_the_year = datetime.strptime(str(mydate.year) + "0101", '%Y%m%d')
+    diff_to_first_day_of_the_year = mydate - first_day_of_the_year
+    day_of_the_year = 1 + diff_to_first_day_of_the_year.days
 
     # Logic to calculate gps week
-    gps_week = 1982 + gps_date/7
+    gps_week = diff_to_gps_week.days/7
     # print gps_week
 
-    new_name = "UNAH" + str(gps_week) + "/UNAH" + str(gps_date) + "0.AS"
+    # Get the prefix
+    prefix = old_name[:4]
+    prefix = prefix.upper()
+    print prefix
+
+    new_name = prefix + str(gps_week) + "/" + prefix + str(day_of_the_year) + "0.AS"
     # print new_name
 
-    return new_name, gps_week
+    return new_name, gps_week, prefix
 
 
 def get_months():
@@ -61,6 +71,14 @@ def get_months():
 def main():
 
     print ""
+
+    # old_name = "unah20170724_000000.AS"
+    # new_name, gps_week = get_new_name(old_name)
+    #
+    # print new_name
+    #
+    # print "gps week: " + str(gps_week)
+
     # Get all the months (folders) to process
     months = get_months()
 
@@ -71,14 +89,14 @@ def main():
             for filename in files:
                 old_name = filename
                 # Generate new name based on date and gps week (new folder)
-                new_name, gps_week = get_new_name(old_name)
+                new_name, gps_week, prefix = get_new_name(old_name)
                 print filename + "   renamed to   " + new_name
 
                 # Check if gps week folder exist
-                folder_exist = os.path.exists("./" + month + "/UNAH" + str(gps_week))
+                folder_exist = os.path.exists("./" + month + "/" + prefix + str(gps_week))
                 # Create new folder if not found
                 if folder_exist is not True:
-                    os.mkdir("./" + month + "/UNAH" + str(gps_week))
+                    os.mkdir("./" + month + "/" + prefix + str(gps_week))
                 # Actual renaming
                 os.rename("./" + month + "/" + old_name, "./" + month + "/" + new_name)
 
