@@ -43,6 +43,14 @@ def get_new_name(old_name):
     diff_to_first_day_of_the_year = mydate - first_day_of_the_year
     day_of_the_year = 1 + diff_to_first_day_of_the_year.days
 
+    # Add leading zeros
+    if day_of_the_year < 10:
+        day_of_the_year = "00" + str(day_of_the_year)
+    elif day_of_the_year < 100:
+        day_of_the_year = "0" + str(day_of_the_year)
+    else:
+        day_of_the_year = str(day_of_the_year)
+
     # Logic to calculate gps week
     gps_week = diff_to_gps_week.days/7
     # print gps_week
@@ -57,7 +65,7 @@ def get_new_name(old_name):
     file_extension = old_name[k:]
     # print file_extension
 
-    new_name = prefix + str(gps_week) + "/" + prefix + str(day_of_the_year) + "0." + file_extension
+    new_name = prefix + str(gps_week) + "/" + prefix + day_of_the_year + "0." + file_extension
     # print new_name
 
     return new_name, gps_week, prefix
